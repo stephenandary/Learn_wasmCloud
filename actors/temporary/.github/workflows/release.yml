@@ -1,21 +1,93 @@
+# Replace all occurrences of "EXAMPLE" with the example name (e.g. ECHO)
+# Replace workflow triggers with provider with the example name, should be the same as the folder path
+
 name: Release to GHCR
 on:
   workflow_dispatch:
   push:
     branches: [main]
+    # are paths necessary
     paths:
       - "**"
       - "src/**"
       - "Cargo.*"
+      - "actor/temporary/**"
     tags:
       - "v*"
-env:
+      - "temporary-v*"
+
+env:  
+  # Set to MONO or MULTI
+  WASMCLOUD_REPO_STYLE: MONO 
   # For the release action, you'll have to set the following variables
   WASH_ISSUER_KEY: ${{ secrets.WASH_ISSUER_KEY }}
   WASH_SUBJECT_KEY: ${{ secrets.WASH_SUBJECT_KEY }}
   WASMCLOUD_PAT: ${{ secrets.WASMCLOUD_PAT }}
+
 jobs:
-  build_signed_actor:
+### MONO REPO ###
+  monorepo-build_signed_actor:
+    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STLE == 'MONO' # Only run on tag push
+    env:   
+      working-directory: ./actor/temporary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: wasmcloud/common-actions/install-wash@main
+
+      - name: Add wasm32-unknown-unknown
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Build wasmcloud actor
+        run: make
+        working-directory: ${{ env.working-directory }}
+      
+      - name: Upload signed actor to GH Actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: wasmcloud-actor
+          path: ${{ env.working-directory }}/build/*.wasm
+
+  monorepo_github_release:
+    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STLE == 'MONO' # Only run on tag push
+    needs: monorepo_build_signed_actor
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download signed actor
+      uses: actions/download-artifact@v2
+      with:
+        name: wasmcloud-actor
+        path: ${{ env.working-directory }}/build
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ env.working-directory }}/build/*.wasm
+        token: ${{ secrets.GITHUB_TOKEN }}
+        prerelease: true
+        draft: false
+
+  monorepo_artifact_release:
+    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STLE == 'MONO' # Only run on tag push
+    needs: monorepo_build_signed_actor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download signed actor
+        uses: actions/download-artifact@v2
+        with:
+          name: wasmcloud-actor
+          path: ${{ env.working-directory }}/build
+
+      - name: Determine artifact metadata
+        run: |
+          echo "oci-repository=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
+          echo "oci-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
+        working-directory: ${{ env.working-directory }}
+
+  ### MULT REPO ###
+  multirepo-build_signed_actor:
+    if: env.WASMCLOUD_REPO_STLE == 'MULTI'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -36,10 +108,10 @@ jobs:
         with:
           name: wasmcloud-actor
           path: build/*.wasm
-
-  github_release:
-    if: startswith(github.ref, 'refs/tags/') # Only run on tag push
-    needs: build_signed_actor
+  
+  multirepo_github_release:
+    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STLE == 'MULTI' # Only run on tag push
+    needs: multirepo_build_signed_actor
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -67,8 +139,9 @@ jobs:
           prerelease: false
           draft: false
 
-  artifact_release:
-    needs: build_signed_actor
+  multirepo_artifact_release:
+    if: env.WASMCLOUD_REPO_STLE == 'MULTI'
+    needs: multirepo_build_signed_actor
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -95,3 +168,4 @@ jobs:
           WASH_REG_PASSWORD: ${{ secrets.WASMCLOUD_PAT }}
         run: |
           wash reg push ghcr.io/${{ github.REPOSITORY }}:${{ env.actor-version }} build/${{ env.actor-name }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
+
