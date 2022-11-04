@@ -11,3 +11,33 @@ Must create Cargo.lock at root as well. Must make sure directories defined in wo
 Modify actions for actor and provider referenced from:
 https://github.com/wasmCloud/examples/blob/main/.github/workflows/TEMPLATE_actor.yml
 https://github.com/wasmCloud/examples/blob/main/.github/workflows/TEMPLATE_provider.yml
+
+
+Deploying application based on: 
+https://cosmonic.com/docs/user_guide/deploying-your-application/
+
+When using a monorepo this will diverge when you skip git push because build.yml is not run to generate keys. 
+Manually generated keys will not be overwritten on subsequent package builds. 
+
+Create $HOME/.wash/keys directory
+
+run wash keys gen account
+place seed in file:  ~/.wash/keys/<github_username>_account.nk. => In GitHub = WASH_ISSUER_KEY
+public key is not needed as it can be generated from seed. 
+
+run wash keys gen module  
+place seed in file:  ~/.wash/keys/<github_username>_module.nk. => In GitHub = WASH_SUBJECT_KEY
+public key is not needed as it can be generated from seed. 
+
+
+
+TO DO: 
+Refactor release.yml to allow for flexibility for mono or multirepo. 
+
+Attempt 1: Env Variable - if fails try tag structure conditionality
+
+Env variables: 
+
+WASH_REPO_TYPE = MONO
+or 
+WASH_REPO_TYPE = MULTI
