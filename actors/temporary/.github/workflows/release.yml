@@ -27,7 +27,7 @@ env:
 jobs:
 ### MONO REPO ###
   monorepo-build_signed_actor:
-    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STYLE == 'MONO' # Only run on tag push
+    if: startswith(github.ref, 'refs/tags/') && ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Only run on tag push
     env:   
       working-directory: ./actor/temporary
     runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
           path: ${{ env.working-directory }}/build/*.wasm
 
   monorepo_github_release:
-    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STYLE == 'MONO' # Only run on tag push
+    if: startswith(github.ref, 'refs/tags/') && ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Only run on tag push
     needs: monorepo_build_signed_actor
     env:   
       working-directory: ./actor/temporary
@@ -70,7 +70,7 @@ jobs:
         draft: false
 
   monorepo_artifact_release:
-    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STYLE == 'MONO' # Only run on tag push
+    if: startswith(github.ref, 'refs/tags/') && ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Only run on tag push
     needs: monorepo_build_signed_actor
     env:   
       working-directory: ./actor/temporary
@@ -91,7 +91,7 @@ jobs:
 
   ### MULT REPO ###
   multirepo-build_signed_actor:
-    if: env.WASMCLOUD_REPO_STYLE == 'MULTI'
+    if: ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -114,7 +114,7 @@ jobs:
           path: build/*.wasm
   
   multirepo_github_release:
-    if: startswith(github.ref, 'refs/tags/') && env.WASMCLOUD_REPO_STYLE == 'MULTI' # Only run on tag push
+    if: startswith(github.ref, 'refs/tags/') && ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }} # Only run on tag push
     needs: multirepo_build_signed_actor
     runs-on: ubuntu-latest
     steps:
@@ -144,7 +144,7 @@ jobs:
           draft: false
 
   multirepo_artifact_release:
-    if: env.WASMCLOUD_REPO_STYLE == 'MULTI'
+    if: ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }}
     needs: multirepo_build_signed_actor
     runs-on: ubuntu-latest
     steps:
