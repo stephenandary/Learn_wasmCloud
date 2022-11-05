@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    # are paths necessary
+    # are paths necessary?
     paths:
       - "**"
       - "src/**"
