@@ -7,6 +7,7 @@ on:
       - "**"
       - "src/**"
       - "Cargo.*"
+      ## IS THIS NECESSARY IF I HAVE ** ABOVE
       - "actors/temporary/**"
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
@@ -37,7 +38,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= ./actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
@@ -61,7 +62,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= ./actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
@@ -98,7 +99,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= ./actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
