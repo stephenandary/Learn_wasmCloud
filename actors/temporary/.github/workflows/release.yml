@@ -41,7 +41,7 @@ jobs:
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
-          echo "WORKING_DIR=./" >> $GITHUB_ENV
+          echo "WORKING_DIR=" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         run: make
         working-directory: ${{ env.WORKING_DIR }}
@@ -65,7 +65,7 @@ jobs:
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
-          echo "WORKING_DIR=./" >> $GITHUB_ENV
+          echo "WORKING_DIR=" >> $GITHUB_ENV
       - name: Download signed actor
         uses: actions/download-artifact@v2
         with:
@@ -102,7 +102,7 @@ jobs:
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
-          echo "WORKING_DIR=./" >> $GITHUB_ENV
+          echo "WORKING_DIR=" >> $GITHUB_ENV
       - name: Download signed actor
         uses: actions/download-artifact@v2
         with:
