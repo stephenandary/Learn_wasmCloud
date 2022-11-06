@@ -7,7 +7,7 @@ on:
       - "**"
       - "src/**"
       - "Cargo.*"
-      - "actor/temporary/**"
+      - "actors/temporary/**"
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
       # Set the tag prefix below to actor name
@@ -37,14 +37,14 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
           echo "WORKING_DIR=" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         run: make
-        working-directory: ./${{ env.WORKING_DIR }}
+        working-directory: ${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
         uses: actions/upload-artifact@v2
         with:
@@ -61,7 +61,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
@@ -98,7 +98,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
