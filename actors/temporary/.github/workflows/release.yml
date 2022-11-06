@@ -48,17 +48,17 @@ jobs:
       #   run: cargo test --target x86_64-unknown-linux-gnu -- --nocapture
 
       ### MONO REPO SECTION
-      - name: "Set working Directory if Mono Repo"
+      - name: Set working Directory if Mono Repo
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
         env:
           working-directory: ./actor/${{ env.ACTOR_NAME }}
 
-      - name: Build wasmcloud actor in mono-repo
+      - name: Monorepo - Build wasmcloud actor
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }}
         run: make
         working-directory: ${{ env.working-directory }}
 
-      - name: Upload signed actor to GH Actions from mono-repo
+      - name: Monorepo - Upload signed actor to GH Actions
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }}
         uses: actions/upload-artifact@v2
         with:
@@ -66,11 +66,11 @@ jobs:
           path: ${{ env.working-directory }}/build/*.wasm
 
       ### MULTI REPO SECTION
-      - name: Build wasmcloud actor in multi-repo
+      - name: Multirepo - Build wasmcloud actor
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }}
         run: make
 
-      - name: Upload signed actor to GH Actions from multi-repo
+      - name: Multirepo - Upload signed actor to GH Actions
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }}
         uses: actions/upload-artifact@v2
         with:
@@ -88,12 +88,12 @@ jobs:
       - uses: wasmcloud/common-actions/install-wash@main
 
       ### MONO REPO SECTION
-      - name: "Set working Directory if Mono Repo"
+      - name: Set working Directory if Mono Repo
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
         env:
           working-directory: ./actor/${{ env.ACTOR_NAME }}
 
-      - name: Download signed actor
+      - name: Monorepo -  Download signed actor
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }}
         uses: actions/download-artifact@v2
         with:
@@ -102,7 +102,7 @@ jobs:
 
       ### SHOULD I CREATE STEP FOR RELEASE TEXT HERE?
 
-      - name: Release
+      - name: Monorepo - Release
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }}
         uses: softprops/action-gh-release@v1
         with:
@@ -112,14 +112,14 @@ jobs:
           draft: false
 
       ### MULTI REPO SECTION
-      - name: Download signed actor
+      - name: Multirepo - Download signed actor
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }}
         uses: actions/download-artifact@v2
         with:
           name: wasmcloud-actor
           path: build
 
-      - name: Create release text
+      - name: Multirepo - Create release text
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }}
         run: |
           export oci_version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')
@@ -130,7 +130,7 @@ jobs:
           echo "$claims" >> release.txt
           echo "\`\`\`" >> release.txt
 
-      - name: Release
+      - name: Multirepo - Release
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MULTI' }}
         uses: softprops/action-gh-release@v1
         with:
@@ -149,22 +149,31 @@ jobs:
       - uses: wasmcloud/common-actions/install-wash@main
 
       ### MONO REPO SECTION
-      - name: "Set working Directory if Mono Repo"
+      - name: Set working Directory if Mono Repo
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
         env:
           working-directory: ./actor/${{ env.ACTOR_NAME }}
 
-      - name: Download signed actor
+      - name: Monorepo - Download signed actor
         uses: actions/download-artifact@v2
         with:
           name: wasmcloud-actor
           path: ${{ env.working-directory }}/build
 
-      - name: Determine artifact metadata
+      - name: Monorepo - Determine artifact metadata
         run: |
           echo "oci-repository=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
           echo "oci-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
         working-directory: ${{ env.working-directory }}
+
+      - name: Monorepo - Push actor to GHCR
+        env:
+          WASH_REG_USER: ${{ github.repository_owner }}
+          WASH_REG_PASSWORD: ${{ env.WASMCLOUD_PAT }}
+        ### RUN MAY NEED TO BE UPDATED, COPIED FROM MULTIREPO SECTION AS MONO TEMPLATE USED AZURE CR
+        run: |
+          wash reg push ghcr.io/${{ github.REPOSITORY }}:${{ env.actor-version }} build/${{ env.actor-name }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
+
 
       ### MULTI REPO SECTION
       - name: Determine actor name
