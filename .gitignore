@@ -6,3 +6,5 @@ pre-otp/
 *logs.txt
 
 host_config.json
+
+target/
