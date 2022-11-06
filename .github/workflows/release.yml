@@ -37,7 +37,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR=./actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: wasmcloud-actor
-          path: ${{ env.working-directory }}/build/*.wasm
+          path: ${{ env.WORKING_DIR }}/build/*.wasm
 
   github_release:
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
@@ -61,7 +61,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR=./actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
@@ -70,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: wasmcloud-actor
-          path: ${{ env.working-directory }}/build
+          path: ${{ env.WORKING_DIR }}/build
       - name: Create release text
         run: |
           export oci_version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')
@@ -83,7 +83,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ env.working-directory }}/build/*.wasm
+          files: ${{ env.WORKING_DIR }}/build/*.wasm
           token: ${{ env.WASMCLOUD_PAT }}
           body_path: release.txt
           prerelease: false
@@ -98,7 +98,7 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR=./actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR= actor/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
         run: |
@@ -107,7 +107,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: wasmcloud-actor
-          path: ${{ env.working-directory }}/build
+          path: ${{ env.WORKING_DIR }}/build
       - name: Determine actor name
         run: |
           echo "actor-name=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
