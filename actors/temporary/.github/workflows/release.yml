@@ -2,6 +2,7 @@
 # Can use labels, and/or branches to define a package release in mono, and for multi try to keep it working as is. 
 # EVENTUALLY REFACTOR SO THAT THERE IS ONLY 1 SET OF STEPS - NOT 2 - WHERE THE WORKING DIRECTORY IS SET TO 
 # EITHER ./ or ./actor/$actorname
+# FOR MONOREPO WORKFLOW NEEDS TO BE COPIED TO CORRECT DIRECTORY FROM WORKFLOWS DIR IN ACTOR.
 
 
 # Replace all occurrences of "EXAMPLE" with the example name (e.g. ECHO)
