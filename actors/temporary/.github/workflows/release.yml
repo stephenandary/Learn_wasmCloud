@@ -1,3 +1,7 @@
+# When both of the below existing workflows for mono and multirepo work, then concider best way to refactor. 
+# Can use labels, and/or branches to define a package release in mono, and for multi try to keep it working as is. 
+
+
 # Replace all occurrences of "EXAMPLE" with the example name (e.g. ECHO)
 # Replace workflow triggers with provider with the example name, should be the same as the folder path
 
@@ -13,8 +17,8 @@ on:
       - "Cargo.*"
       - "actor/temporary/**"
     tags:
-      - "v*"
-      - "temporary-v*"
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "temporary-v[0-9]+.[0-9]+.[0-9]+"
 
 env:  
   # Set to MONO or MULTI
