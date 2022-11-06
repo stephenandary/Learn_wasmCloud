@@ -49,7 +49,7 @@ jobs:
 
       ### MONO REPO SECTION
       - name: "Set working Directory if Mono Repo"
-        if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set workind directory if monorepo
+        if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
         env:
           working-directory: ./actor/${{ env.ACTOR_NAME }}
 
@@ -89,7 +89,7 @@ jobs:
 
       ### MONO REPO SECTION
       - name: "Set working Directory if Mono Repo"
-        if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set workind directory if monorepo
+        if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
         env:
           working-directory: ./actor/${{ env.ACTOR_NAME }}
 
@@ -100,12 +100,14 @@ jobs:
           name: wasmcloud-actor
           path: ${{ env.working-directory }}/build
 
+      ### SHOULD I CREATE STEP FOR RELEASE TEXT HERE?
+
       - name: Release
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }}
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ env.working-directory }}/build/*.wasm
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ env.WASMCLOUD_PAT }}
           prerelease: true
           draft: false
 
@@ -148,7 +150,7 @@ jobs:
 
       ### MONO REPO SECTION
       - name: "Set working Directory if Mono Repo"
-        if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set workind directory if monorepo
+        if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
         env:
           working-directory: ./actor/${{ env.ACTOR_NAME }}
 
@@ -168,17 +170,20 @@ jobs:
       - name: Determine actor name
         run: |
           echo "actor-name=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
+          
       - name: Determine actor version
         if: startswith(github.ref, 'refs/tags/') # Only run on tag push
         run: |
           echo "actor-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
+
       - name: Determine actor version (main)
         if: ${{ !startswith(github.ref, 'refs/tags/') }}
         run: |
           echo "actor-version=latest" >> $GITHUB_ENV
+
       - name: Push actor to GHCR
         env:
           WASH_REG_USER: ${{ github.repository_owner }}
-          WASH_REG_PASSWORD: ${{ secrets.WASMCLOUD_PAT }}
+          WASH_REG_PASSWORD: ${{ env.WASMCLOUD_PAT }}
         run: |
           wash reg push ghcr.io/${{ github.REPOSITORY }}:${{ env.actor-version }} build/${{ env.actor-name }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
