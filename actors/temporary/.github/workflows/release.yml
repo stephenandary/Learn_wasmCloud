@@ -160,10 +160,9 @@ jobs:
           name: wasmcloud-actor
           path: ${{ env.working-directory }}/build
 
-      - name: Monorepo - Determine artifact metadata
+      - name: Multirepo -  Determine actor version
         run: |
-          echo "oci-repository=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
-          echo "oci-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
+          echo "actor-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
         working-directory: ${{ env.working-directory }}
 
       - name: Monorepo - Push actor to GHCR
@@ -176,21 +175,15 @@ jobs:
 
 
       ### MULTI REPO SECTION
-      - name: Determine actor name
+      - name: Multirepo - Determine actor name
         run: |
           echo "actor-name=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
           
-      - name: Determine actor version
-        if: startswith(github.ref, 'refs/tags/') # Only run on tag push
+      - name: Multirepo -  Determine actor version
         run: |
           echo "actor-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
 
-      - name: Determine actor version (main)
-        if: ${{ !startswith(github.ref, 'refs/tags/') }}
-        run: |
-          echo "actor-version=latest" >> $GITHUB_ENV
-
-      - name: Push actor to GHCR
+      - name: Multirepo - Push actor to GHCR
         env:
           WASH_REG_USER: ${{ github.repository_owner }}
           WASH_REG_PASSWORD: ${{ env.WASMCLOUD_PAT }}
