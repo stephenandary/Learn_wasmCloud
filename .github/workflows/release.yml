@@ -50,8 +50,9 @@ jobs:
       ### MONO REPO SECTION
       - name: Set working Directory if Mono Repo
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
-        env:
-          working-directory: ./actor/${{ env.ACTOR_NAME }}
+        run: |
+          echo "working-directory=./actor/${{ env.ACTOR_NAME }}"
+        
 
       - name: Monorepo - Build wasmcloud actor
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }}
@@ -90,8 +91,8 @@ jobs:
       ### MONO REPO SECTION
       - name: Set working Directory if Mono Repo
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
-        env:
-          working-directory: ./actor/${{ env.ACTOR_NAME }}
+        run: |
+          echo "working-directory=./actor/${{ env.ACTOR_NAME }}"
 
       - name: Monorepo -  Download signed actor
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }}
@@ -151,8 +152,8 @@ jobs:
       ### MONO REPO SECTION
       - name: Set working Directory if Mono Repo
         if: ${{ env.WASMCLOUD_REPO_STYLE == 'MONO' }} # Set working directory if monorepo
-        env:
-          working-directory: ./actor/${{ env.ACTOR_NAME }}
+        run: |
+          echo "working-directory=./actor/${{ env.ACTOR_NAME }}"
 
       - name: Monorepo - Download signed actor
         uses: actions/download-artifact@v2
