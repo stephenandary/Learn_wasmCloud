@@ -44,7 +44,7 @@ jobs:
           echo "WORKING_DIR=" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         run: make
-        working-directory: ${{ env.WORKING_DIR }}
+        working-directory: .${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
         uses: actions/upload-artifact@v2
         with:
