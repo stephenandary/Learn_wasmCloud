@@ -1,0 +1,14 @@
+/workspaces/Jammin_Proto/target/debug/deps/minicbor-8129ea12fa2d22d1.rmeta: /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/lib.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/bytes.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/data.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode/decoder.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode/error.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/encoder.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/error.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/write.rs
+
+/workspaces/Jammin_Proto/target/debug/deps/minicbor-8129ea12fa2d22d1.d: /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/lib.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/bytes.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/data.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode/decoder.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode/error.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/encoder.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/error.rs /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/write.rs
+
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/lib.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/bytes.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/data.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode/decoder.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/decode/error.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/encoder.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/error.rs:
+/usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/minicbor-0.17.1/src/encode/write.rs:
