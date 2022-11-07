@@ -1,3 +1,0 @@
-cargo:rustc-link-lib=static=ring-core
-cargo:rustc-link-lib=static=ring-test
-cargo:rustc-link-search=native=/workspaces/Jammin_Proto/target/debug/build/ring-649a8d99fe8125fa/out
