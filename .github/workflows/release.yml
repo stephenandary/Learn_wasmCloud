@@ -47,7 +47,7 @@ jobs:
           echo "WORKING_DIR = $HOME/${{ github.event.repository.name }}" >> $GITHUB_ENV
       - name: List Working Directory Contents for Debug
         run: |
-          echo "DIR_CONTENTS = $(ls)" >> $GITHUB_ENV
+          dirls = `ls` | "DIR_CONTENTS = $dirls" >> $GITHUB_ENV
         working-directory: ${{ env.WORKING_DIR }}
       - name: Build wasmcloud actor
         run: make
