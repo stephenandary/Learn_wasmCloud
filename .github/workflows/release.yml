@@ -44,7 +44,8 @@ jobs:
         run: |
           echo "WORKING_DIR = $HOME/${{ github.event.repository.name }}" >> $GITHUB_ENV
       - name: Build wasmcloud actor
-        run: ls
+        run: |
+         ls
         run: make
         working-directory: ${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
