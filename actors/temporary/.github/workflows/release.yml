@@ -38,11 +38,11 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR = $HOME/actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
-        if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
+        if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
-          echo "WORKING_DIR=" >> $GITHUB_ENV
+          echo "WORKING_DIR = $HOME" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         run: make
         working-directory: ${{ env.WORKING_DIR }}
@@ -62,11 +62,11 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR = $HOME/actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
-        if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
+        if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
-          echo "WORKING_DIR=" >> $GITHUB_ENV
+          echo "WORKING_DIR = $HOME >> $GITHUB_ENV
       - name: Download signed actor
         uses: actions/download-artifact@v2
         with:
@@ -99,11 +99,11 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR= actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR = $HOME/actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
-        if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multireporepo
+        if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
-          echo "WORKING_DIR=" >> $GITHUB_ENV
+          echo "WORKING_DIR = $HOME" >> $GITHUB_ENV
       - name: Download signed actor
         uses: actions/download-artifact@v2
         with:
@@ -116,11 +116,10 @@ jobs:
         if: startswith(github.ref, 'refs/tags/') # Only run on tag push
         run: |
           echo "actor-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
-      ## IS THIS STEP NECESSARY? JOB WONT RUN IF THE CONDITION DOES NOT START WITH TAG
-      # - name: Determine actor version (main)
-      #   if: ${{ !startswith(github.ref, 'refs/tags/') }}
-      #   run: |
-      #     echo "actor-version=latest" >> $GITHUB_ENV
+      - name: Determine actor version (main)
+        if: ${{ !startswith(github.ref, 'refs/tags/') }}
+        run: |
+          echo "actor-version=latest" >> $GITHUB_ENV
       - name: Push actor to GHCR
         env:
           WASH_REG_USER: ${{ github.repository_owner }}
