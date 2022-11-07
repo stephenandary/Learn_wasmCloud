@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths:
-      - "**"
-      - "src/**"
-      - "Cargo.*"
-      ## IS THIS NECESSARY IF I HAVE ** ABOVE
-      - "actors/temporary/**"
+    # paths:
+    #   - "**"
+    #   - "src/**"
+    #   - "Cargo.*"
+    #   ## IS THIS NECESSARY IF I HAVE ** ABOVE
+    #   - "actors/temporary/**"
     tags:
       # LIKELY NEED TO MAKE TAG CONDITIONALS MORE SCRUPULOUS IN JOBS BELOW
       - "v[0-9]+.[0-9]+.[0-9]+"
@@ -27,7 +27,6 @@ env:
   WASMCLOUD_PAT: ${{ secrets.WASMCLOUD_PAT }}
 jobs:
   build_signed_actor:
-    if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -56,7 +55,7 @@ jobs:
           path: build/*.wasm
 
   github_release:
-    if: startswith(github.ref, 'refs/tags/') # Only run on tag push
+    # if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     needs: build_signed_actor
     runs-on: ubuntu-latest
     steps:
@@ -116,13 +115,13 @@ jobs:
         run: |
           echo "actor-name=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
       - name: Determine actor version
-        if: startswith(github.ref, 'refs/tags/') # Only run on tag push
+        # if: startswith(github.ref, 'refs/tags/') # Only run on tag push
         run: |
           echo "actor-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
-      - name: Determine actor version (main)
-        if: ${{ !startswith(github.ref, 'refs/tags/') }}
-        run: |
-          echo "actor-version=latest" >> $GITHUB_ENV
+      # - name: Determine actor version (main)
+      #   if: ${{ !startswith(github.ref, 'refs/tags/') }}
+      #   run: |
+      #     echo "actor-version=latest" >> $GITHUB_ENV
       - name: Push actor to GHCR
         env:
           WASH_REG_USER: ${{ github.repository_owner }}
