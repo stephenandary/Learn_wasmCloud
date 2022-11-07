@@ -45,10 +45,6 @@ jobs:
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
           echo "WORKING_DIR = $HOME/${{ github.event.repository.name }}" >> $GITHUB_ENV
-      - name: "Check file existence"
-        run: |
-          cat Makefile
-        working-directory: ${{ env.WORKING_DIR }}
       - name: Build wasmcloud actor
         run: make
         working-directory: ${{ env.WORKING_DIR }}
