@@ -46,7 +46,7 @@ jobs:
         run: |
           echo "WORKING_DIR = $HOME/${{ github.event.repository.name }}" >> $GITHUB_ENV
       - name: "Check file existence"
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v2.0.0
         with:
           files: "Makefile"
         working-directory: ${{ env.WORKING_DIR }}
