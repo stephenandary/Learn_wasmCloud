@@ -10,6 +10,7 @@ on:
       ## IS THIS NECESSARY IF I HAVE ** ABOVE
       - "actors/temporary/**"
     tags:
+      # LIKELY NEED TO MAKE TAG CONDITIONALS MORE SCRUPULOUS IN JOBS BELOW
       - "v[0-9]+.[0-9]+.[0-9]+"
       # Set the tag prefix below to actor name
       - "temporary-v[0-9]+.[0-9]+.[0-9]+"
