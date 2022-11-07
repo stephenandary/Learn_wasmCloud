@@ -1,3 +1,4 @@
+# For Monorepo will need to copy these files to that workflow directory. 
 name: Release to GHCR
 on:
   workflow_dispatch:
@@ -12,7 +13,7 @@ on:
     tags:
       # LIKELY NEED TO MAKE TAG CONDITIONALS MORE SCRUPULOUS IN JOBS BELOW
       - "v[0-9]+.[0-9]+.[0-9]+"
-      # Set the tag prefix below to actor name
+      # Set the tag prefix below to actor name - hopefully can be done when 'wash new' generates directory.
       - "temporary-v[0-9]+.[0-9]+.[0-9]+"
 env:
   # Set to MONO or MULTI
@@ -46,7 +47,7 @@ jobs:
           echo "WORKING_DIR = $HOME/${{ github.event.repository.name }}" >> $GITHUB_ENV
       - name: List Working Directory Contents for Debug
         run: |
-          echo $(ls)
+          echo "DIR_CONTENTS = $(ls)" >> $GITHUB_ENV
         working-directory: ${{ env.WORKING_DIR }}
       - name: Build wasmcloud actor
         run: make
