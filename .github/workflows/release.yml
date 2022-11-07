@@ -20,8 +20,6 @@ env:
   WASMCLOUD_REPO_STYLE: MONO 
   # Set this variable to actor name for mono-repos
   ACTOR_NAME: temporary
-  # Default working-directory - for MULTI style repos
-  WORKING_DIR: ./
   # For the release action, you'll have to set the following variables
   # For the release action, you'll have to set the following variables
   WASH_ISSUER_KEY: ${{ secrets.WASH_ISSUER_KEY }}
@@ -32,7 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: dart_project
+        # Default working-directory - for MULTI style repos
+        working-directory: ./
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
