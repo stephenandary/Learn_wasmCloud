@@ -40,14 +40,14 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR = ${GITHUB_WORKSPACE}/actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR = actors/temporary" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
           echo "WORKING_DIR = ${GITHUB_WORKSPACE}" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         run: make
-        working-directory: actors/temporary
+        working-directory: ${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
         uses: actions/upload-artifact@v2
         with:
