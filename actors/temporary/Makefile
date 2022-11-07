@@ -1,5 +1,5 @@
 # Makefile for temporary
-SHELL=/bin/bash
+
 PROJECT  = temporary
 VERSION  = $(shell cargo metadata --no-deps --format-version 1 | jq -r '.packages[] .version' | head -1)
 REVISION = 0
