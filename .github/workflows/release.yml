@@ -53,6 +53,7 @@ jobs:
         with:
           name: wasmcloud-actor
           path: ${{ env.WORKING_DIR }}/build/*.wasm
+        working-directory: ${{ env.WORKING_DIR }}
 
   github_release:
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
