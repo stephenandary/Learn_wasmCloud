@@ -52,8 +52,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: wasmcloud-actor
-          path: ${{ env.WORKING_DIR }}/build/*.wasm
-        working-directory: ${{ env.WORKING_DIR }}
+          path: build/*.wasm
 
   github_release:
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
@@ -65,11 +64,11 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR = ${GITHUB_WORKSPACE}/actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR=${GITHUB_WORKSPACE}/actors/$ACTOR_NAME" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
-          echo "WORKING_DIR = ${GITHUB_WORKSPACE} >> $GITHUB_ENV
+          echo "WORKING_DIR=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
       - name: Download signed actor
         uses: actions/download-artifact@v2
         with:
@@ -102,11 +101,11 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR = ${GITHUB_WORKSPACE}/actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+          echo "WORKING_DIR=${GITHUB_WORKSPACE}/actors/$ACTOR_NAME" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
-          echo "WORKING_DIR = ${GITHUB_WORKSPACE}" >> $GITHUB_ENV
+          echo "WORKING_DIR=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
       - name: Download signed actor
         uses: actions/download-artifact@v2
         with:
