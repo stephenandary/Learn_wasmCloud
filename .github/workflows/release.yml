@@ -20,6 +20,8 @@ env:
   WASMCLOUD_REPO_STYLE: MONO 
   # Set this variable to actor name for mono-repos
   ACTOR_NAME: temporary
+  # Default working-directory
+  WORKING_DIR: ./
   # For the release action, you'll have to set the following variables
   # For the release action, you'll have to set the following variables
   WASH_ISSUER_KEY: ${{ secrets.WASH_ISSUER_KEY }}
@@ -28,10 +30,6 @@ env:
 jobs:
   build_signed_actor:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        # Default working-directory - for MULTI style repos
-        working-directory: ./
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
@@ -44,11 +42,11 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR = ./actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
-      # - name: Multirepo - Set working Directory
-      #   if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
-      #   run: |
-      #     echo "WORKING_DIR = ${GITHUB_WORKSPACE}" >> $GITHUB_ENV
+          echo "WORKING_DIR = ${{ env.WORKING_DIR }}/actors/${{ env.ACTOR_NAME }}" >> $GITHUB_ENV
+      - name: Multirepo - Set working Directory
+        if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
+        run: |
+          echo "WORKING_DIR = ${{ env.WORKING_DIR }}" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         run: make
         working-directory: ${{ env.WORKING_DIR }}
