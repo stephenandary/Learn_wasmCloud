@@ -58,6 +58,7 @@ jobs:
   github_release:
     # if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     needs: build_signed_actor
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -95,6 +96,7 @@ jobs:
 
   artifact_release:
     needs: build_signed_actor
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
