@@ -17,7 +17,7 @@ wasmcloud-interface-httpserver = "0.7"
 # Due to using monorepo, profiles must be set in root Cargo.toml
 # profiles for the non root package will be ignored, specify profiles at the workspace root
 # if need specific profile for package, need to look up how to do this.
-# [profile.release]
-# # Optimize for small code size
-# lto = true
-# opt-level = "s"
+[profile.release]
+# Optimize for small code size
+lto = true
+opt-level = "s"
