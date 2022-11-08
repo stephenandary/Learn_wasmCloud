@@ -12,9 +12,7 @@ on:
 env:
   # Set to MONO or MULTI
   WASMCLOUD_REPO_STYLE: MONO 
-  # Set this variable to actor name for mono-repos
-  # Would like to extract this from tag on push when it is format "actorname-v*"
-  # ACTOR_NAME: temporary
+  ACTOR_NAME: temporary
   # For the release action, you'll have to set the following variables
   # For the release action, you'll have to set the following variables
   WASH_ISSUER_KEY: ${{ secrets.WASH_ISSUER_KEY }}
@@ -33,10 +31,6 @@ jobs:
       # the two lines below to automatically run tests
       # - name: Test actor
       #   run: cargo test --target x86_64-unknown-linux-gnu -- --nocapture
-      - name: Extract Actor Name from Tag
-        run: |
-          tag_string=$GITHUB_REF_NAME
-          echo "ACTOR_NAME=${$tag_string%-v*}" >> $GITHUB_ENV
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
