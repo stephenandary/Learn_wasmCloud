@@ -51,8 +51,8 @@ jobs:
       - name: Upload signed actor to GH Actions
         uses: actions/upload-artifact@v2
         with:
-          name: wasmcloud-actor
-          path: build/*.wasm
+          name: $ACTOR_NAME
+          path: $WORKING_DIR/build/*.wasm
 
   github_release:
     # if: startswith(github.ref, 'refs/tags/') # Only run on tag push
