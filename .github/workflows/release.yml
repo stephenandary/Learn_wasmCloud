@@ -40,11 +40,11 @@ jobs:
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
-          echo "WORKING_DIR=${GITHUB_WORKSPACE}/actors/$ACTOR_NAME" >> $GITHUB_ENV
+          echo "WORKING_DIR=${HOME}/actors/$ACTOR_NAME" >> $GITHUB_ENV
       - name: Multirepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MULTI' # Run if multirepo
         run: |
-          echo "WORKING_DIR=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
+          echo "WORKING_DIR=${HOME}" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         run: make
         working-directory: ${{ env.WORKING_DIR }}
