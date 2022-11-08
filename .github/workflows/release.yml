@@ -4,17 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    # paths:
-    #   - "**"
-    #   - "src/**"
-    #   - "Cargo.*"
-    #   ## IS THIS NECESSARY IF I HAVE ** ABOVE
-    #   - "actors/temporary/**"
     tags:
       # LIKELY NEED TO MAKE TAG CONDITIONALS MORE SCRUPULOUS IN JOBS BELOW
       - "v[0-9]+.[0-9]+.[0-9]+"
       # Set the tag prefix below to actor name - hopefully can be done when 'wash new' generates directory.
-      - "temporary-v[0-9]+.[0-9]+.[0-9]+"
+      - "*-v[0-9]+.[0-9]+.[0-9]+"
 env:
   # Set to MONO or MULTI
   WASMCLOUD_REPO_STYLE: MONO 
@@ -41,7 +35,8 @@ jobs:
       #   run: cargo test --target x86_64-unknown-linux-gnu -- --nocapture
       - name: Extract Actor Name from Tag
         run: |
-          echo "ACTOR_NAME=${$GITHUB_REF_NAME%-v*}" >> $GITHUB_ENV
+          tag_string=$GITHUB_REF_NAME
+          echo "ACTOR_NAME=${$tag_string%-v*}" >> $GITHUB_ENV
       - name: Monorepo - Set working Directory
         if: env.WASMCLOUD_REPO_STYLE == 'MONO' # Run if monorepo
         run: |
