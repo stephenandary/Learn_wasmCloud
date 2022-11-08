@@ -34,6 +34,12 @@ WASH      ?= wash
 # location of cargo output files
 TARGET_DIR ?= target
 # location of wasm file after build and signing
+ifeq ($(WASMCLOUD_REPO_STYLE),"MONO")
+		DIST_WASM = $(PROJECT)/build/$(PROJECT)_s.wasm
+endif
+ifeq ($(WASMCLOUD_REPO_STYLE),"MULTI")
+		DIST_WASM = build/$(PROJECT)_s.wasm
+endif
 DIST_WASM ?= build/$(PROJECT)_s.wasm
 WASM_TARGET ?= wasm32-unknown-unknown
 ACTOR_NAME  ?= $(PROJECT)
