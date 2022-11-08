@@ -34,7 +34,7 @@ WASH      ?= wash
 # location of cargo output files
 TARGET_DIR ?= target
 # location of wasm file after build and signing
-DIST_WASM ?= /build/$(PROJECT)_s.wasm
+DIST_WASM ?= build/$(PROJECT)_s.wasm
 WASM_TARGET ?= wasm32-unknown-unknown
 ACTOR_NAME  ?= $(PROJECT)
 UNSIGNED_WASM = $(TARGET_DIR)/$(WASM_TARGET)/release/$(PROJECT).wasm

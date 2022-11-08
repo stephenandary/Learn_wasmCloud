@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: $ACTOR_NAME
-          path: $ACTOR_NAME/build/*.wasm
+          path: ${GITHUB_WORKSPACE}/build/*.wasm
 
   github_release:
     # if: startswith(github.ref, 'refs/tags/') # Only run on tag push
