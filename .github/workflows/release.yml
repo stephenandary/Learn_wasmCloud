@@ -19,6 +19,7 @@ env:
   # Set to MONO or MULTI
   WASMCLOUD_REPO_STYLE: MONO 
   # Set this variable to actor name for mono-repos
+  # Would like to extract this from tag on push when it is format "actorname-v*"
   ACTOR_NAME: temporary
   # For the release action, you'll have to set the following variables
   # For the release action, you'll have to set the following variables
