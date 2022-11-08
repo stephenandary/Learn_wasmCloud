@@ -32,9 +32,9 @@ KEYDIR    ?= .keys
 CARGO     ?= cargo
 WASH      ?= wash
 # Dist directory if Monorepo
-	@if [ $(WASMCLOUD_REPO_STYLE) = "MONO" ]; then\
-		DIST_WASM = $(PROJECT)/build/$(PROJECT)_s.wasm;\
-	fi
+ifeq ($(WASMCLOUD_REPO_STYLE),"MONO")
+		DIST_WASM = $(PROJECT)/build/$(PROJECT)_s.wasm
+endif
 # location of cargo output files
 TARGET_DIR ?= target
 # location of wasm file after build and signing
