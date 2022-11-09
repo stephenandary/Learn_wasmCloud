@@ -12,6 +12,7 @@ env:
   WASMCLOUD_PAT: ${{ secrets.WASMCLOUD_PAT }}
 jobs:
   build_signed_actor:
+    environment: dev
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     runs-on: ubuntu-latest
     steps:
@@ -42,6 +43,7 @@ jobs:
 
 
   github_release:
+    environment: dev
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     needs: build_signed_actor
     runs-on: ubuntu-latest
@@ -72,6 +74,7 @@ jobs:
           draft: false
 
   artifact_release:
+    environment: dev
     needs: build_signed_actor
     runs-on: ubuntu-latest
     steps:
