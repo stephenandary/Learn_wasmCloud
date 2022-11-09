@@ -1,17 +1,5 @@
-For Rust-Analyzer to not throw a fit for monorepo of crates, 
-create root level Cargo.toml, and define workspace with reference to every cargo crate related:
-https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html
-
-Defining workspaces in this way means that profiles for the non root package will be ignored, and we must specify profiles at the workspace root.
-e.g. [profiles.release] in Cargo.toml at root instead of actors/actor/Cargo.toml
-
-Must create Cargo.lock at root as well. Must make sure directories defined in workspace contain Crates.
-`run cargo generate-lockfile`
-
-Modify actions for actor and provider referenced from:
-https://github.com/wasmCloud/examples/blob/main/.github/workflows/TEMPLATE_actor.yml
-https://github.com/wasmCloud/examples/blob/main/.github/workflows/TEMPLATE_provider.yml
-
+For Rust-Analyzer to not throw a fit for monorepo of crates, best to open actors as a new window with VSCode for now. 
+Workspaces caused other issues with makefiles. 
 
 Deploying application based on: 
 https://cosmonic.com/docs/user_guide/deploying-your-application/
@@ -43,3 +31,18 @@ or
 WASH_REPO_TYPE = MULTI
 
 NEED TO MAKE A REPO TO TEST MONOREPO ACTION RELEASE
+
+
+### OLD STUFF NOT TO DO ANYMORE - HERE FOR REFERENCE ###
+create root level Cargo.toml, and define workspace with reference to every cargo crate related:
+https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html
+
+Defining workspaces in this way means that profiles for the non root package will be ignored, and we must specify profiles at the workspace root.
+e.g. [profiles.release] in Cargo.toml at root instead of actors/actor/Cargo.toml
+
+Must create Cargo.lock at root as well. Must make sure directories defined in workspace contain Crates.
+`run cargo generate-lockfile`
+
+Modify actions for actor and provider referenced from:
+https://github.com/wasmCloud/examples/blob/main/.github/workflows/TEMPLATE_actor.yml
+https://github.com/wasmCloud/examples/blob/main/.github/workflows/TEMPLATE_provider.yml
