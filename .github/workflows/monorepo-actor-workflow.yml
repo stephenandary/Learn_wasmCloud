@@ -45,7 +45,7 @@ jobs:
        #  echo "WASH_SUBJECT_SECRET=${{ secrets.env.SECRET_STRING }}" >> $GITHUB_ENV
       - name: Build wasmcloud actor
         env:
-          WASH_SUBJECT_KEY: ${{ secrets.WASH_SUBJECT_KEY }}
+          WASH_SUBJECT_KEY: ${{ secrets.SECRET_STRING }}
         run: make
         working-directory: ${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
