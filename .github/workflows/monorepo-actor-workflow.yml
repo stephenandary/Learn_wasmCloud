@@ -30,22 +30,27 @@ jobs:
           tag=${GITHUB_REF#refs/tags/*-v*/}
           tag2=${tag##*\/}
           echo "ACTOR_NAME=${tag2%-v*}" >> $GITHUB_ENV
-      - name: Extract Actor version from Tag
+      - name: Extract Actor Version from Tag
         run: |
           tag=${GITHUB_REF#refs/tags/*-v*/}
           version=`expr match "$tag" '.*\([v][0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)'` 
           echo "ACTOR_VERSION=${version}" >> $GITHUB_ENV
-      - name: Determine Actor Name from Cargo
-        run: |
-          echo "VERIFY_ACTOR_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
-      - name: Determine actor version
-        if: startswith(github.ref, 'refs/tags/') # Only run on tag push
-        run: |
-          echo "actor-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
       - name: Set working Directory
         run: |
           echo "WORKING_DIR=$PWD/actor/$ACTOR_NAME" >> $GITHUB_ENV
+      - name: Determine Actor Name from Cargo
+        run: |
+          echo "VERIFY_ACTOR_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
+      - name: Determine Actor Version from Cargo
+        run: |
+          echo "VERIFY_ACTOR_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
+      - name: Verify Cargo and Tag are in Sync
+        id: verify-metadata
+        if: $ACTOR_NAME == $VERIFY_ACTOR_NAME && $ACTOR_VERSION == $VERIFY_ACTOR_VERSION
+        run: |
+          echo "VERIFIED=true" >> $GITHUB_OUTPUT
       - name: Build Subject Key Secret String
+        if: ${{ steps.verify-metadata.outputs.VERIFIED }} == "true"
         run: |
          secret_prefix='WASH_'
          secret_unique=$(echo $ACTOR_NAME | tr 'a-z' 'A-Z')
