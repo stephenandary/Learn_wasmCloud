@@ -78,6 +78,7 @@ jobs:
         with:
           name: ${{ env.ACTOR_NAME }}
           path: ${{ env.WORKING_DIR }}/build/*.wasm
+        if-no-files-found: error
       - name: Output Verification Status
         id: set_verified
         run: |
