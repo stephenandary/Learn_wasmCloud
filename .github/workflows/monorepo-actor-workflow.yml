@@ -33,7 +33,7 @@ jobs:
       - name: Extract Actor Version from Tag
         run: |
           tag=${GITHUB_REF#refs/tags/*-v*/}
-          version=`expr match "$tag" '.*\([v][0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)'` 
+          version=`expr match "$tag" '.*\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)'` 
           echo "ACTOR_VERSION=${version}" >> $GITHUB_ENV
       - name: Set working Directory
         run: |
@@ -44,11 +44,15 @@ jobs:
       - name: Determine Actor Version from Cargo
         run: |
           echo "VERIFY_ACTOR_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
-      # - name: Verify Cargo and Tag are in Sync
-      #   if: ${{ env.ACTOR_NAME == env.VERIFY_ACTOR_NAME && env.ACTOR_VERSION == env.VERIFY_ACTOR_VERSION }}
-      #   run: |
-      #     echo "VERIFIED=true" >> $GITHUB_ENV
+      - name: Verify Cargo and Tag are in Sync
+        run: |
+          if ${ACTOR_NAME} == ${VERIFY_ACTOR_NAME} && ${ACTOR_VERSION} == ${VERIFY_ACTOR_VERSION}; then
+            echo "VERIFIED=true" >> $GITHUB_ENV
+          else
+            echo "VERIFIED=false" >> $GITHUB_ENV
+          fi
       - name: Build Subject Key Secret String
+        if: env.VERIFIED
         run: |
          secret_prefix='WASH_'
          secret_unique=$(echo $ACTOR_NAME | tr 'a-z' 'A-Z')
