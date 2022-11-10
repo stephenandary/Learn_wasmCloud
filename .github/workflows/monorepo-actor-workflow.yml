@@ -42,9 +42,11 @@ jobs:
         run: |
           echo "WORKING_DIR=$PWD/actor/$ACTOR_NAME" >> $GITHUB_ENV
       - name: Determine Actor Name from Cargo
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           echo "VERIFY_ACTOR_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
       - name: Determine Actor Version from Cargo
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           echo "VERIFY_ACTOR_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
       - name: Verify Cargo and Tag are in Sync
