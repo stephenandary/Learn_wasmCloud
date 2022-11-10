@@ -45,11 +45,11 @@ jobs:
         run: |
           echo "VERIFY_ACTOR_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
       - name: Verify Cargo and Tag are in Sync
-        if: env.ACTOR_NAME == env.VERIFY_ACTOR_NAME && env.ACTOR_VERSION == env.VERIFY_ACTOR_VERSION
+        if: ${{ env.ACTOR_NAME == env.VERIFY_ACTOR_NAME && env.ACTOR_VERSION == env.VERIFY_ACTOR_VERSION }}
         run: |
           echo "VERIFIED=true" >> $GITHUB_ENV
       - name: Build Subject Key Secret String
-        if: env.VERIFIED == "true"
+        if: ${{ env.VERIFIED == "true" }}
         run: |
          secret_prefix='WASH_'
          secret_unique=$(echo $ACTOR_NAME | tr 'a-z' 'A-Z')
@@ -57,13 +57,11 @@ jobs:
          secret=${secret_prefix}${secret_unique}${secret_suffix}
          echo "SECRET_STRING=$secret" >> $GITHUB_ENV
       - name: Build wasmcloud actor
-        if: env.VERIFIED == "true"
         env:
           WASH_SUBJECT_KEY: ${{ secrets[env.SECRET_STRING] }}
         run: make
         working-directory: ${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
-        if: env.VERIFIED == "true"
         uses: actions/upload-artifact@v2
         with:
           name: $ACTOR_NAME
