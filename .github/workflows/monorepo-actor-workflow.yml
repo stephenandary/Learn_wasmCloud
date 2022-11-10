@@ -44,12 +44,11 @@ jobs:
       - name: Determine Actor Version from Cargo
         run: |
           echo "VERIFY_ACTOR_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
-      - name: Verify Cargo and Tag are in Sync
-        if: ${{ env.ACTOR_NAME == env.VERIFY_ACTOR_NAME && env.ACTOR_VERSION == env.VERIFY_ACTOR_VERSION }}
-        run: |
-          echo "VERIFIED=true" >> $GITHUB_ENV
+      # - name: Verify Cargo and Tag are in Sync
+      #   if: ${{ env.ACTOR_NAME == env.VERIFY_ACTOR_NAME && env.ACTOR_VERSION == env.VERIFY_ACTOR_VERSION }}
+      #   run: |
+      #     echo "VERIFIED=true" >> $GITHUB_ENV
       - name: Build Subject Key Secret String
-        if: ${{ env.VERIFIED == "true" }}
         run: |
          secret_prefix='WASH_'
          secret_unique=$(echo $ACTOR_NAME | tr 'a-z' 'A-Z')
