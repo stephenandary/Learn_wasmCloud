@@ -66,7 +66,7 @@ jobs:
             echo "::error title=VerificationFailed::Cargo Version Does Not Match Tag Version"
           fi
       - name: Build Subject Key Secret String
-        # if: env.VERIFIED == 'true'
+        if: env.VERIFIED == 'true'
         run: |
          secret_prefix='WASH_'
          secret_unique=$(echo $ACTOR_NAME | tr 'a-z' 'A-Z')
@@ -74,13 +74,13 @@ jobs:
          secret=${secret_prefix}${secret_unique}${secret_suffix}
          echo "SECRET_STRING=$secret" >> $GITHUB_ENV
       - name: Build wasmcloud actor
-        # if: env.VERIFIED == 'true'
+        if: env.VERIFIED == 'true'
         env:
           WASH_SUBJECT_KEY: ${{ secrets[env.SECRET_STRING] }}
         run: wash build
         working-directory: ${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
-        # if: env.VERIFIED == 'true'
+        if: env.VERIFIED == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: $ACTOR_NAME
