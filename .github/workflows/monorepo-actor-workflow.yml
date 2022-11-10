@@ -45,7 +45,6 @@ jobs:
         run: |
           echo "VERIFY_ACTOR_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
       - name: Verify Cargo and Tag are in Sync
-        id: verify-metadata
         if: env.ACTOR_NAME == env.VERIFY_ACTOR_NAME && env.ACTOR_VERSION == env.VERIFY_ACTOR_VERSION
         run: |
           echo "VERIFIED=true" >> $GITHUB_ENV
