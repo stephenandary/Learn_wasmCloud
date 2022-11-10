@@ -28,12 +28,13 @@ jobs:
       - name: Extract Actor Name from Tag
         run: |
           tag-ref=${GITHUB_REF#refs/tags/*-v*/}
-          version=`expr match "$tag-ref" '.*\(v[0-9]+.[0-9]+.[0-9]+\)'` 
-          echo "ACTOR_NAME=${tag2%-v*}" >> $GITHUB_ENV
+          trimmed-tag-ref=${tag-ref##*\/}
+          echo "ACTOR_NAME=${trimmed-tag-ref%-v*}" >> $GITHUB_ENV
       - name: Extract Actor version from Tag
         run: |
-          tag=${GITHUB_REF#refs/tags/*-v*/}
-          echo "ACTOR_VERSION=${tag2%-v*}" >> $GITHUB_ENV
+          tag-ref=${GITHUB_REF#refs/tags/*-v*/}
+          version=`expr match "$tag-ref" '.*\(v[0-9]+.[0-9]+.[0-9]+\)'` 
+          echo "ACTOR_VERSION=${version}" >> $GITHUB_ENV
       - name: Determine Actor Name from Cargo
         run: |
           echo "VERIFY_ACTOR_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
