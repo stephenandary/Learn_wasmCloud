@@ -27,13 +27,13 @@ jobs:
       #   run: cargo test --target x86_64-unknown-linux-gnu -- --nocapture
       - name: Extract Actor Name from Tag
         run: |
-          tag-ref=${GITHUB_REF#refs/tags/*-v*/}
-          trimmed-tag-ref=${tag-ref##*\/}
-          echo "ACTOR_NAME=${trimmed-tag-ref%-v*}" >> $GITHUB_ENV
+          tag=${GITHUB_REF#refs/tags/*-v*/}
+          tag2=${tag##*\/}
+          echo "ACTOR_NAME=${tag2%-v*}" >> $GITHUB_ENV
       - name: Extract Actor version from Tag
         run: |
-          tag-ref=${GITHUB_REF#refs/tags/*-v*/}
-          version=`expr match "$tag-ref" '.*\(v[0-9]+.[0-9]+.[0-9]+\)'` 
+          tag=${GITHUB_REF#refs/tags/*-v*/}
+          version=`expr match "$tag" '.*\(v[0-9]+.[0-9]+.[0-9]+\)'` 
           echo "ACTOR_VERSION=${version}" >> $GITHUB_ENV
       - name: Determine Actor Name from Cargo
         run: |
