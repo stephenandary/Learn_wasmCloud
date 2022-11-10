@@ -82,20 +82,20 @@ jobs:
         id: set_verified
         run: |
           if [ "$VERIFIED" = "true" ] ; then
-            echo "::set_output name=verification::true"
+            echo "verification::true" >> $GITHUB_OUTPUT
           else
-            echo "::set_output name=verification::false"
+            echo "verification::false" >> $GITHUB_OUTPUT
             echo "::error title=VerificationFailed::Cargo Version Does Not Match Tag Version"
           fi
       - name: Output Working Dir
         id: set_dir
-        run: echo "::set_output name=working_dir::$WORKING_DIR"
+        run: echo "working_dir::$WORKING_DIR" >> $GITHUB_OUTPUT
       - name: Output Actor Name
         id: set_actor_name
-        run: echo "::set_output name=actor_name::$ACTOR_NAME"
+        run: echo "actor_name::$ACTOR_NAME" >> $GITHUB_OUTPUT
       - name: Output Actor Version
         id: set_actor_version
-        run: echo "::set_output name=actor_version::$ACTOR_VERSION"
+        run: echo "actor_version::$ACTOR_VERSION" >> $GITHUB_OUTPUT
 
   github_release:
     environment: dev
