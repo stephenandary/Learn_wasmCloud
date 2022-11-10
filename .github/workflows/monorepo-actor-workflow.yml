@@ -25,7 +25,7 @@ jobs:
         run: rustup target add wasm32-unknown-unknown
       # Once you've written unit tests for your actor, you can uncomment
       # the two lines below to automatically run tests
-      # - name: Test actor
+      # - name: Test Actor
       #   run: cargo test --target x86_64-unknown-linux-gnu -- --nocapture
       - name: Extract Actor Name from Tag
         run: |
@@ -63,7 +63,7 @@ jobs:
          secret_suffix='_KEY'
          secret=${secret_prefix}${secret_unique}${secret_suffix}
          echo "SECRET_STRING=$secret" >> $GITHUB_ENV
-      - name: Build WASMcloud Actor
+      - name: Build wasmCloud Actor
         if: env.VERIFIED == 'true'
         env:
           WASH_SUBJECT_KEY: ${{ secrets[env.SECRET_STRING] }}
@@ -102,12 +102,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
-      - name: Download signed actor
+      - name: Download Signed Actor
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.ACTOR_NAME }}
           path: ${{ env.ACTOR_NAME }}/build
-      - name: Create release text
+      - name: Create Release Text
         run: |
           export oci_version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')
           export claims=$(wash claims inspect $ACTOR_NAME/build/*.wasm)
