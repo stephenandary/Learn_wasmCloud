@@ -53,19 +53,10 @@ jobs:
           echo "VERIFY_ACTOR_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
       - name: Verify Cargo and Tag are in Sync
         run: |
-          if ${ACTOR_NAME} == ${VERIFY_ACTOR_NAME} && ${ACTOR_VERSION} == ${VERIFY_ACTOR_VERSION}; then
+          if [ "$ACTOR_NAME" == "$VERIFY_ACTOR_NAME" && "$ACTOR_VERSION" == "$VERIFY_ACTOR_VERSION" ]; then
             echo "VERIFIED=true" >> $GITHUB_ENV
           else
             echo "VERIFIED=false" >> $GITHUB_ENV
-          fi
-      - name: Set Verification Output
-        id: set_verified
-        run: |
-          if ${VERIFIED} == 'true'; then
-            echo "::set_output name=verification::true"
-          else
-            echo "::set_output name=verification::false"
-            echo "::error title=VerificationFailed::Cargo Version Does Not Match Tag Version"
           fi
       - name: Build Subject Key Secret String
         if: env.VERIFIED == 'true'
@@ -87,6 +78,15 @@ jobs:
         with:
           name: $ACTOR_NAME
           path: ${{ env.WORKING_DIR }}/build/*.wasm
+      - name: Output Verification Status
+        id: set_verified
+        run: |
+          if ${VERIFIED} == 'true'; then
+            echo "::set_output name=verification::true"
+          else
+            echo "::set_output name=verification::false"
+            echo "::error title=VerificationFailed::Cargo Version Does Not Match Tag Version"
+          fi
       - name: Output Working Dir
         id: set_dir
         run: echo "::set_output name=working_dir::$WORKING_DIR"

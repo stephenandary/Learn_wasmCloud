@@ -1,6 +1,6 @@
 [package]
 name = "temporary"
-version = "0.0.8"
+version = "0.0.9"
 authors = ["Stephen Andary"]
 edition = "2021"
 
