@@ -13,7 +13,7 @@ jobs:
   build_signed_actor:
     environment: dev
     if: | 
-      startswith(github.ref, 'refs/tags/') 
+      startswith(github.ref, 'refs/tags/') &&
       github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
