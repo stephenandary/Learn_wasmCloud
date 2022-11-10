@@ -16,9 +16,9 @@ jobs:
     environment: dev
     if: startswith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    outputs:
-      verification_output: ${{ steps.set_verified.outputs.verification }}
-      secret_output: 'place-holder'
+    # outputs:
+    #   verification_output: ${{ steps.set_verified.outputs.verification }}
+    #   secret_output: 'place-holder'
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
@@ -54,16 +54,16 @@ jobs:
           else
             echo "VERIFIED=false" >> $GITHUB_ENV
           fi
-      - name: Set Job Output
-        id: set_verified
-        run: |
-          if ${VERIFIED} == 'true'; then
-            echo "::set_output name=verification::true" >> $GITHUB_OUTPUT
-          else
-            echo "::set_output name=verification::false" >> $GITHUB_OUTPUT
-          fi
+      # - name: Set Verification Output
+      #   id: set_verified
+      #   run: |
+      #     if ${VERIFIED} == 'true'; then
+      #       echo "::set_output name=verification::true" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "::set_output name=verification::false" >> $GITHUB_OUTPUT
+      #     fi
       - name: Build Subject Key Secret String
-        if: env.VERIFIED == 'true'
+        # if: env.VERIFIED == 'true'
         run: |
          secret_prefix='WASH_'
          secret_unique=$(echo $ACTOR_NAME | tr 'a-z' 'A-Z')
@@ -71,13 +71,13 @@ jobs:
          secret=${secret_prefix}${secret_unique}${secret_suffix}
          echo "SECRET_STRING=$secret" >> $GITHUB_ENV
       - name: Build wasmcloud actor
-        if: env.VERIFIED == 'true'
+        # if: env.VERIFIED == 'true'
         env:
           WASH_SUBJECT_KEY: ${{ secrets[env.SECRET_STRING] }}
         run: make
         working-directory: ${{ env.WORKING_DIR }}
       - name: Upload signed actor to GH Actions
-        if: env.VERIFIED == 'true'
+        # if: env.VERIFIED == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: $ACTOR_NAME
@@ -88,7 +88,7 @@ jobs:
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     environment: dev
     needs: build_signed_actor
-    if: needs.build_signed_actor.outputs.verification_output == 'true'
+    # if: needs.build_signed_actor.outputs.verification_output == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -119,7 +119,7 @@ jobs:
   artifact_release:
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     needs: build_signed_actor
-    if: needs.build_signed_actor.outputs.verification_output == 'true'
+    # if: needs.build_signed_actor.outputs.verification_output == 'true'
     environment: dev
     runs-on: ubuntu-latest
     steps:
