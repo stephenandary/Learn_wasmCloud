@@ -20,7 +20,7 @@ jobs:
       verification_output: ${{ steps.set_verified.outputs.verification }}
       actor_name_output: ${{ steps.set_actor_name.outputs.actor_name }}
       # actor_version_output: ${{ steps.set_actor_version.outputs.actor_version }}
-      working_dir_output: ${{ steps.set_working_dir.outputs.working_dir }}
+      # working_dir_output: ${{ steps.set_working_dir.outputs.working_dir }}
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
@@ -74,10 +74,10 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
       - name: Upload Signed Actor to GH Actions
         if: env.VERIFIED == 'true'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: $ACTOR_NAME
-          path: ${{ env.WORKING_DIR }}/build/*.wasm
+          name: ${{ env.ACTOR_NAME }}
+          path: ${{ env.ACTOR_NAME }}/build/*.wasm
       - name: Output Verification Status
         id: set_verified
         run: |
@@ -87,9 +87,9 @@ jobs:
             echo "verification=false" >> $GITHUB_OUTPUT
             echo "::error title=VerificationFailed::Cargo Version Does Not Match Tag Version"
           fi
-      - name: Output Working Dir
-        id: set_working_dir
-        run: echo "working_dir=$WORKING_DIR" >> $GITHUB_OUTPUT
+      # - name: Output Working Dir
+      #   id: set_working_dir
+      #   run: echo "working_dir=$WORKING_DIR" >> $GITHUB_OUTPUT
       - name: Output Actor Name
         id: set_actor_name
         run: echo "actor_name=$ACTOR_NAME" >> $GITHUB_OUTPUT
@@ -103,20 +103,19 @@ jobs:
     if: needs.build_signed_actor.outputs.verification_output == 'true'
     runs-on: ubuntu-latest
     env:
-      WORKING_DIR: ${{ needs.build_signed_actor.outputs.working_dir_output }}
       ACTOR_NAME: ${{ needs.build_signed_actor.outputs.actor_name_output }}
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
       - name: Download signed actor
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ env.ACTOR_NAME }}
-          path: ${{ env.WORKING_DIR }}/build
+          path: ${{ env.ACTOR_NAME }}/build
       - name: Create release text
         run: |
           export oci_version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')
-          export claims=$(wash claims inspect $WORKING_DIR/build/*.wasm)
+          export claims=$(wash claims inspect $ACTOR_NAME/build/*.wasm)
           echo "Your actor can be accessed at \`ghcr.io/${{ github.REPOSITORY }}:$oci_version\`" >> release.txt
           echo "Claims information:" >> release.txt
           echo "\`\`\`" >> release.txt
@@ -125,7 +124,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ env.WORKING_DIR }}/build/*.wasm
+          files: ${{ env.ACTOR_NAME }}/build/*.wasm
           token: ${{ env.WASMCLOUD_PAT }}
           body_path: release.txt
           prerelease: false
@@ -137,19 +136,18 @@ jobs:
     if: needs.build_signed_actor.outputs.verification_output == 'true'
     runs-on: ubuntu-latest
     env:
-      WORKING_DIR: ${{ needs.build_signed_actor.outputs.working_dir_output }}
       ACTOR_NAME: ${{ needs.build_signed_actor.outputs.actor_name_output }}
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
       - name: Download signed actor
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ env.ACTOR_NAME }}
-          path: ${{ env.WORKING_DIR }}/build
+          path: ${{ env.ACTOR_NAME }}/build
       - name: Push actor to GHCR
         env:
           WASH_REG_USER: ${{ github.repository_owner }}
           WASH_REG_PASSWORD: ${{ secrets.WASMCLOUD_PAT }}
         run: |
-          wash reg push ghcr.io/${{ github.REPOSITORY }}:${{ env.ACTOR_NAME }} ${{ env.WORKING_DIR }}/build/${{ env.ACTOR_NAME }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
+          wash reg push ghcr.io/${{ github.REPOSITORY }}:${{ env.ACTOR_NAME }} ${{ env.ACTOR_NAME }}/build/${{ env.ACTOR_NAME }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
