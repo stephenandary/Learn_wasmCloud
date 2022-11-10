@@ -11,7 +11,7 @@ env:
 
 jobs:
   build_signed_actor:
-    environment: dev
+    environment: dev # for env secrets
     if: startswith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     outputs:
@@ -93,7 +93,7 @@ jobs:
         run: echo "actor_version=$ACTOR_VERSION" >> $GITHUB_OUTPUT
 
   github_release:
-    environment: dev
+    environment: dev # for env secrets
     needs: build_signed_actor
     if: needs.build_signed_actor.outputs.verification_output == 'true'
     runs-on: ubuntu-latest
@@ -126,7 +126,7 @@ jobs:
           draft: false
 
   artifact_release:
-    environment: dev
+    environment: dev # for env secrets
     needs: build_signed_actor
     if: needs.build_signed_actor.outputs.verification_output == 'true'
     runs-on: ubuntu-latest
@@ -146,4 +146,4 @@ jobs:
           WASH_REG_USER: ${{ github.repository_owner }}
           WASH_REG_PASSWORD: ${{ secrets.WASMCLOUD_PAT }}
         run: |
-          wash reg push ghcr.io/${{ env.WASH_REG_USER }}/${{ github.REPOSITORY }}/${{ env.ACTOR_NAME }}:${{ env.ACTOR_VERSION }} ${{ env.ACTOR_NAME }}/build/${{ env.ACTOR_NAME }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
+          wash reg push ghcr.io/${{ env.ACTOR_NAME }}:${{ env.ACTOR_VERSION }} ${{ env.ACTOR_NAME }}/build/${{ env.ACTOR_NAME }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
