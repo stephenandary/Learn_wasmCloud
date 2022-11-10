@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ACTOR_NAME }}
-          path: ${{ env.ACTOR_NAME }}/build/*.wasm
+          path: ${{ env.WORKING_DIR }}/build/*.wasm
       - name: Output Verification Status
         id: set_verified
         run: |
