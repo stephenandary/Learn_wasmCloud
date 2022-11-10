@@ -108,19 +108,6 @@ jobs:
         with:
           name: $ACTOR_NAME
           path: ${{ env.WORKING_DIR }}/build
-      - name: Determine actor name
-        run: |
-          echo "actor-name=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name')" >> $GITHUB_ENV
-        # CONSIDER USING ACTOR_NAME ABOVE AND SKIPPING THIS STEP
-      - name: Determine actor version
-        if: startswith(github.ref, 'refs/tags/') # Only run on tag push
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          echo "actor-version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].version')" >> $GITHUB_ENV
-      - name: Determine actor version (main)
-        if: ${{ !startswith(github.ref, 'refs/tags/') }}
-        run: |
-          echo "actor-version=latest" >> $GITHUB_ENV
       - name: Push actor to GHCR
         env:
           WASH_REG_USER: ${{ github.repository_owner }}
