@@ -88,10 +88,9 @@ jobs:
 
 
   github_release:
-    if: startswith(github.ref, 'refs/tags/') # Only run on tag push
+    if: needs.build_signed_actor.outputs.verification_output == 'true'
     environment: dev
     needs: build_signed_actor
-    # if: needs.build_signed_actor.outputs.verification_output == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -120,9 +119,8 @@ jobs:
           draft: false
 
   artifact_release:
-    if: startswith(github.ref, 'refs/tags/') # Only run on tag push
+    if: needs.build_signed_actor.outputs.verification_output == 'true'
     needs: build_signed_actor
-    # if: needs.build_signed_actor.outputs.verification_output == 'true'
     environment: dev
     runs-on: ubuntu-latest
     steps:
