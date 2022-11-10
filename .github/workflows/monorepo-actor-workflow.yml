@@ -81,7 +81,7 @@ jobs:
       - name: Output Verification Status
         id: set_verified
         run: |
-          if ${VERIFIED} == 'true'; then
+          if [ "$VERIFIED" = "true" ] ; then
             echo "::set_output name=verification::true"
           else
             echo "::set_output name=verification::false"
