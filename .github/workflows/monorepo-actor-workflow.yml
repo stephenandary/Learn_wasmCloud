@@ -58,9 +58,9 @@ jobs:
         id: set_verified
         run: |
           if ${VERIFIED} == 'true'; then
-            echo "::set_output name=verification::true"
+            echo "::set_output name=verification::true" >> $GITHUB_OUTPUT
           else
-            echo "::set_output name=verification::false"
+            echo "::set_output name=verification::false" >> $GITHUB_OUTPUT
           fi
       - name: Build Subject Key Secret String
         if: env.VERIFIED == 'true'
