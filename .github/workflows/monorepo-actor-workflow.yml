@@ -2,9 +2,9 @@ name: Release to GHCR
 on:
   workflow_dispatch:
   push:
-    branches: [main, monorepo-actor-dev]
     tags:
       - "*-v[0-9]+.[0-9]+.[0-9]+"
+    branches: [main, monorepo-actor-dev]
 env:
   # For the release action, you'll have to set the following variables
   WASH_ISSUER_KEY: ${{ secrets.WASH_ISSUER_KEY }}
