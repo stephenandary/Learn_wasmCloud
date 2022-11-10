@@ -4,24 +4,20 @@ on:
   push:
     tags:
       - "*-v[0-9]+.[0-9]+.[0-9]+"
-    # pull branches out of this section, and make build require a certain branch. 
-    # branches: [main, monorepo-actor-dev]
 env:
   # For the release action, you'll have to set the following variables
   WASH_ISSUER_KEY: ${{ secrets.WASH_ISSUER_KEY }}
   WASMCLOUD_PAT: ${{ secrets.WASMCLOUD_PAT }}
 
-### ADD LINE TO BUILD TO COMPARE TAG VERSION AGAINST CARGO VERSION
 jobs:
   build_signed_actor:
     environment: dev
-    if: startswith(github.ref, 'refs/tags/')
+    if: startswith(github.ref, 'refs/tags/') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
       verification_output: ${{ steps.set_verified.outputs.verification }}
       actor_name_output: ${{ steps.set_actor_name.outputs.actor_name }}
       actor_version_output: ${{ steps.set_actor_version.outputs.actor_version }}
-      # working_dir_output: ${{ steps.set_working_dir.outputs.working_dir }}
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
@@ -79,7 +75,7 @@ jobs:
         with:
           name: ${{ env.ACTOR_NAME }}
           path: ${{ env.WORKING_DIR }}/build/*.wasm
-        if-no-files-found: error
+          if-no-files-found: error
       - name: Output Verification Status
         id: set_verified
         run: |
@@ -89,9 +85,6 @@ jobs:
             echo "verification=false" >> $GITHUB_OUTPUT
             echo "::error title=VerificationFailed::Cargo Version Does Not Match Tag Version"
           fi
-      # - name: Output Working Dir
-      #   id: set_working_dir
-      #   run: echo "working_dir=$WORKING_DIR" >> $GITHUB_OUTPUT
       - name: Output Actor Name
         id: set_actor_name
         run: echo "actor_name=$ACTOR_NAME" >> $GITHUB_OUTPUT
@@ -143,12 +136,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
-      - name: Download signed actor
+      - name: Download Signed Actor
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.ACTOR_NAME }}
           path: ${{ env.ACTOR_NAME }}/build
-      - name: Push actor to GHCR
+      - name: Push Actor to GHCR
         env:
           WASH_REG_USER: ${{ github.repository_owner }}
           WASH_REG_PASSWORD: ${{ secrets.WASMCLOUD_PAT }}
