@@ -4,7 +4,8 @@ on:
   push:
     tags:
       - "*-v[0-9]+.[0-9]+.[0-9]+"
-    branches: [main, monorepo-actor-dev]
+    # pull branches out of this section, and make build require a certain branch. 
+    # branches: [main, monorepo-actor-dev]
 env:
   # For the release action, you'll have to set the following variables
   WASH_ISSUER_KEY: ${{ secrets.WASH_ISSUER_KEY }}
@@ -19,7 +20,7 @@ jobs:
     outputs:
       verification_output: ${{ steps.set_verified.outputs.verification }}
       actor_name_output: ${{ steps.set_actor_name.outputs.actor_name }}
-      # actor_version_output: ${{ steps.set_actor_version.outputs.actor_version }}
+      actor_version_output: ${{ steps.set_actor_version.outputs.actor_version }}
       # working_dir_output: ${{ steps.set_working_dir.outputs.working_dir }}
     steps:
       - uses: actions/checkout@v2
@@ -94,9 +95,9 @@ jobs:
       - name: Output Actor Name
         id: set_actor_name
         run: echo "actor_name=$ACTOR_NAME" >> $GITHUB_OUTPUT
-      # - name: Output Actor Version
-      #   id: set_actor_version
-      #   run: echo "actor_version=$ACTOR_VERSION" >> $GITHUB_OUTPUT
+      - name: Output Actor Version
+        id: set_actor_version
+        run: echo "actor_version=$ACTOR_VERSION" >> $GITHUB_OUTPUT
 
   github_release:
     environment: dev
@@ -138,6 +139,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ACTOR_NAME: ${{ needs.build_signed_actor.outputs.actor_name_output }}
+      ACTOR_VERSION: ${{ needs.build_signed_actor.outputs.actor_version_output }}
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
@@ -151,4 +153,4 @@ jobs:
           WASH_REG_USER: ${{ github.repository_owner }}
           WASH_REG_PASSWORD: ${{ secrets.WASMCLOUD_PAT }}
         run: |
-          wash reg push ghcr.io/${{ github.REPOSITORY }}:${{ env.ACTOR_NAME }} ${{ env.ACTOR_NAME }}/build/${{ env.ACTOR_NAME }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
+          wash reg push ghcr.io/${{ env.ACTOR_NAME }}:${{ env.ACTOR_VERSION }} ${{ env.ACTOR_NAME }}/build/${{ env.ACTOR_NAME }}_s.wasm -a org.opencontainers.image.source=https://github.com/${{ github.REPOSITORY }} --allow-latest
