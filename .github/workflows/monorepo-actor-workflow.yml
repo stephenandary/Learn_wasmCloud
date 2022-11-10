@@ -16,8 +16,8 @@ jobs:
     environment: dev
     if: startswith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    # outputs:
-    #   verification_output: ${{ steps.set_verified.outputs.verification }}
+    outputs:
+      verification_output: ${{ steps.set_verified.outputs.verification }}
     #   secret_output: 'place-holder'
     steps:
       - uses: actions/checkout@v2
@@ -56,14 +56,15 @@ jobs:
           else
             echo "VERIFIED=false" >> $GITHUB_ENV
           fi
-      # - name: Set Verification Output
-      #   id: set_verified
-      #   run: |
-      #     if ${VERIFIED} == 'true'; then
-      #       echo "::set_output name=verification::true" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "::set_output name=verification::false" >> $GITHUB_OUTPUT
-      #     fi
+      - name: Set Verification Output
+        id: set_verified
+        run: |
+          if ${VERIFIED} == 'true'; then
+            echo "::set_output name=verification::true" >> $GITHUB_OUTPUT
+          else
+            echo "::set_output name=verification::false" >> $GITHUB_OUTPUT
+            echo "::error title=VerificationFailed::Cargo Version Does Not Match Tag Version"
+          fi
       - name: Build Subject Key Secret String
         # if: env.VERIFIED == 'true'
         run: |
