@@ -33,7 +33,7 @@ jobs:
       - name: Extract Actor version from Tag
         run: |
           tag=${GITHUB_REF#refs/tags/*-v*/}
-          version=`expr match "$tag" '.*\([v][0-9]+.[0-9]+.[0-9]+\)'` 
+          version=`expr match "$tag" '.*\([v][0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)'` 
           echo "ACTOR_VERSION=${version}" >> $GITHUB_ENV
       - name: Determine Actor Name from Cargo
         run: |
