@@ -1,4 +1,4 @@
-name = "temporary"
+name = "hello"
 language = "rust"
 type = "actor"
 version = "0.1.0"
