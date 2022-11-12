@@ -1,12 +1,12 @@
 [package]
-name = "hello"
+name = "nats-channel"
 version = "0.1.0"
 authors = [ "" ]
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-name = "hello"
+name = "nats_channel"
 
 [dependencies]
 futures = "0.3"
