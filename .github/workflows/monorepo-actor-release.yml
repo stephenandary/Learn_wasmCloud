@@ -2,7 +2,9 @@ name: Release to GHCR
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: 
+      # releases/$ACTOR_NAME
+      - 'releases/**'
     tags:
       - "*-v[0-9]+.[0-9]+.[0-9]+"
 env:
@@ -29,6 +31,10 @@ jobs:
           tag=${GITHUB_REF#refs/tags/*-v*/}
           tag2=${tag##*\/}
           echo "ACTOR_NAME=${tag2%-v*}" >> $GITHUB_ENV
+      - name: Extract Branch Name
+        run: |
+          tag=${GITHUB_REF#refs/heads/releases/*/}
+          echo "BRANCH_NAME=${tag##releases\/}" >> $GITHUB_ENV
       - name: Extract Actor Version from Tag
         run: |
           tag=${GITHUB_REF#refs/tags/*-v*/}
