@@ -13,6 +13,9 @@ echo "Installing WASMCloud Shell"
 curl -s https://packagecloud.io/install/repositories/wasmcloud/core/script.deb.sh | sudo bash
 sudo apt install wasmcloud wash
 
+echo "Installing Cosmonic Shell"
+bash -c "$(curl -fsSL https://cosmonic.sh/install.sh)"
+
 echo "Installing WABT"
 sudo apt-get -y install wabt
 
