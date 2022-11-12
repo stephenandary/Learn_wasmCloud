@@ -33,8 +33,8 @@ jobs:
           echo "ACTOR_NAME=${tag2%-v*}" >> $GITHUB_ENV
       - name: Extract Branch Name
         run: |
-          tag=${GITHUB_REF#refs/heads/releases/*/}
-          echo "BRANCH_NAME=${tag##releases\/}" >> $GITHUB_ENV
+          branch=${GITHUB_REF#refs/heads/releases/*/}
+          echo "BRANCH_NAME=${branch##*releases/}" >> $GITHUB_ENV
       - name: Extract Actor Version from Tag
         run: |
           tag=${GITHUB_REF#refs/tags/*-v*/}
