@@ -1,7 +1,8 @@
-name = "api-gateway"
+name = "apigateway"
 language = "rust"
 type = "actor"
 version = "0.1.0"
 
 [actor]
-claims = ["wasmcloud:httpserver"]
+claims = ["cosmonic:samples:chatlog", "wasmcloud:builtin:logging"]
+call_alias = "mcchat/api"

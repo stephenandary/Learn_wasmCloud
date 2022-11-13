@@ -1,0 +1,21 @@
+[[models]]
+path = "../../interface"
+files = ["chatlog.smithy"]
+
+[[models]]
+url = "https://wasmcloud.github.io/interfaces/idl/org.wasmcloud"
+files = ["wasmcloud-core.smithy", "wasmcloud-model.smithy"]
+
+[html]
+output_dir = "html"
+[html.parameters]
+minified = true
+
+[rust]
+output_dir = "."
+
+[rust.parameters]
+
+[[rust.files]]
+path = "src/chatlog.rs"
+namespace = "com.cosmonic.samples.mcchat.chatlog"

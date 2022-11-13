@@ -1,26 +1,57 @@
+use chatlog::*;
+use outbound::{Outbound, OutboundMessage, OutboundSender};
 use wasmbus_rpc::actor::prelude::*;
-use wasmcloud_interface_httpserver::{HttpRequest, HttpResponse, HttpServer, HttpServerReceiver};
+// use wasmcloud_interface_logging::error;
+
+#[allow(dead_code)]
+mod chatlog;
+
+#[allow(dead_code)]
+mod outbound;
+
+const CHATLOG_ACTOR:&str = "mcchat/chatlog";
 
 #[derive(Debug, Default, Actor, HealthResponder)]
-#[services(Actor, HttpServer)]
+#[services(Actor, Chatlog)]
 struct ApiGatewayActor {}
 
-/// Implementation of HttpServer trait methods
-#[async_trait]
-impl HttpServer for ApiGatewayActor {
-    /// Returns a greeting, "Hello World", in the response body.
-    /// If the request contains a query parameter 'name=NAME', the
-    /// response is changed to "Hello NAME"
-    async fn handle_request(&self, _ctx: &Context, req: &HttpRequest) -> RpcResult<HttpResponse> {
-        let text = form_urlencoded::parse(req.query_string.as_bytes())
-            .find(|(n, _)| n == "name")
-            .map(|(_, v)| v.to_string())
-            .unwrap_or_else(|| "World".to_string());
+const KNOWN_CHANNEL_NAMES: &[&str] = &["http", "nats"];
 
-        Ok(HttpResponse {
-            body: format!("Hello {}", text).as_bytes().to_vec(),
-            ..Default::default()
-        })
+/// Implementation of Chat Log actor trait methods
+#[async_trait]
+impl Chatlog for ApiGatewayActor {
+    async fn write_message(
+        &self,
+        ctx: &Context,
+        arg: &CanonicalChatMessage,
+    ) -> RpcResult<WriteMessageResponse> {
+        let chatlog = ChatlogSender::to_actor(CHATLOG_ACTOR);
+
+        let res = chatlog.write_message(ctx, arg).await;
+
+        // Select every channel that isn't the one that just called
+        let mut targets = KNOWN_CHANNEL_NAMES.to_vec();
+        targets.retain(|c| *c != arg.channel_name);
+
+        for channel in targets {
+            let outbound = OutboundSender::to_actor(&format!("mcchat/{}", channel));
+            let _ = outbound
+                .publish_message(
+                    ctx,
+                    &OutboundMessage {
+                        body: arg.body.to_string(),
+                        source_channel: arg.channel_name.to_string(),
+                        source_user: arg.source_user.to_string(),
+                    },
+                )
+                .await;
+        }
+        res
+    }
+
+    async fn get_messages(&self, ctx: &Context) -> RpcResult<MessagesList> {
+        let chatlog = ChatlogSender::to_actor(CHATLOG_ACTOR);
+
+        chatlog.get_messages(ctx).await
     }
 }
-

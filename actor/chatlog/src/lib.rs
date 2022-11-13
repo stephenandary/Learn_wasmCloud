@@ -1,26 +1,41 @@
+use chatlog::*;
 use wasmbus_rpc::actor::prelude::*;
-use wasmcloud_interface_httpserver::{HttpRequest, HttpResponse, HttpServer, HttpServerReceiver};
+
+#[allow(dead_code)]
+mod chatlog;
+
+mod store;
 
 #[derive(Debug, Default, Actor, HealthResponder)]
-#[services(Actor, HttpServer)]
+#[services(Actor, Chatlog)]
 struct ChatlogActor {}
 
-/// Implementation of HttpServer trait methods
+/// Implementation of Chat Log actor trait methods
 #[async_trait]
-impl HttpServer for ChatlogActor {
-    /// Returns a greeting, "Hello World", in the response body.
-    /// If the request contains a query parameter 'name=NAME', the
-    /// response is changed to "Hello NAME"
-    async fn handle_request(&self, _ctx: &Context, req: &HttpRequest) -> RpcResult<HttpResponse> {
-        let text = form_urlencoded::parse(req.query_string.as_bytes())
-            .find(|(n, _)| n == "name")
-            .map(|(_, v)| v.to_string())
-            .unwrap_or_else(|| "World".to_string());
+impl Chatlog for ChatlogActor {
+    async fn write_message(
+        &self,
+        ctx: &Context,
+        arg: &CanonicalChatMessage,
+    ) -> RpcResult<WriteMessageResponse> {
+       // As a general rule, never return Err from RpcResult<T> functions unless something catastrophic occurred. Do not use Err for validation failures.
+       // Here we return an error in a RpcResult instead
+        Ok(match store::write_message(ctx, arg).await {
+            Ok(_) => WriteMessageResponse {
+                accepted: true,
+                reason: None,
+            },
+            Err(e) => WriteMessageResponse {
+                accepted: false,
+                reason: Some(format!("{}", e)),
+            },
+        })
+    }
 
-        Ok(HttpResponse {
-            body: format!("Hello {}", text).as_bytes().to_vec(),
-            ..Default::default()
+    async fn get_messages(&self, ctx: &Context) -> RpcResult<MessagesList> {
+        Ok(match store::get_messages(ctx).await {
+            Ok(v) => v,
+            Err(_) => vec![],
         })
     }
 }
-
