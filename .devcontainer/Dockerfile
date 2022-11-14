@@ -10,6 +10,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends ripgrep jq httpie fzf fd-find fasd netcat
 
+# [Optional] Uncomment to share GPG keys from Windows with container.
+RUN apt-get update && apt-get install gnupg2 -y
+
 ### BELOW IS FOR DOCKER IN DOCKER FROM MICROSOFT ###
 
 # [Option] Enable non-root Docker access in container
