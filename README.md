@@ -15,3 +15,8 @@ Repo to learn wasmCloud and Cosmonic
 - https://github.com/cosmonic/things-to-build
 - https://github.com/nats-io/nats-server
 - https://github.com/nats-io/nats.rs
+
+## Video Links:
+- https://youtu.be/ELwEdb_pD0k
+- https://youtu.be/7erJ1DV_Tlo
+- https://youtu.be/hjXIUPZ7ArM
