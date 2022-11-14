@@ -6,6 +6,9 @@ echo "Adding WASM Targets"
 rustup target add wasm32-unknown-unknown
 rustup target add wasm32-wasi
 
+echo "Install gpugp2 for gpg key sharing"
+sudo apt-get install gnupg2 -y
+
 echo "Installing Hombrew"
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/vscode/.zshrc
