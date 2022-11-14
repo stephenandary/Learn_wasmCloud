@@ -44,6 +44,6 @@ sudo apt-get -y install postgresql
 echo "Creating Docker-in-Docker Redis Server"
 docker network create -d bridge redisnet
 docker run -d -p 6379:6379 --name myredis --network redisnet redis
-brew install redis-cli
+brew install redis
 
 echo "Done!"
